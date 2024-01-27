@@ -1,6 +1,7 @@
 package biz.lci.springaidemos;
 
 import org.springframework.ai.chat.ChatClient;
+import org.springframework.ai.chat.ChatResponse;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -18,16 +19,17 @@ public class PromptController {
     protected ChatClient chatClient;
 
     @GetMapping("/prompt")
-    public Map<String,String> chat(
+    public Map<String, String> chat(
             @RequestParam(defaultValue = "Tell me an important fact") String userPrompt,
             @RequestParam(defaultValue = "You are a pirate and only like to talk about pirate stuff") String systemPrompt) {
         UserMessage userMessage = new UserMessage(userPrompt);
         SystemMessage systemMessage = new SystemMessage(systemPrompt);
         Prompt prompt = new Prompt(List.of(userMessage, systemMessage));
+        ChatResponse chatResponse = chatClient.call(prompt);
         return Map.of(
                 "userPrompt", userPrompt,
                 "systemPrompt", systemPrompt,
-                "response", chatClient.call(userPrompt)
+                "response", chatResponse.getResult().getOutput().getContent()
         );
     }
 }
