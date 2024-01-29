@@ -2,10 +2,10 @@ package biz.lci.springaidemo;
 
 import org.springframework.ai.chat.ChatClient;
 import org.springframework.ai.chat.Generation;
-import org.springframework.ai.prompt.Prompt;
-import org.springframework.ai.prompt.SystemPromptTemplate;
-import org.springframework.ai.prompt.messages.Message;
-import org.springframework.ai.prompt.messages.UserMessage;
+import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -39,6 +39,6 @@ public class RoleController {
 
         Prompt prompt = new Prompt(List.of(new UserMessage(message), systemMessage));
 
-        return chatClient.generate(prompt).getGenerations();
+        return chatClient.call(prompt).getResults();
     }
 }

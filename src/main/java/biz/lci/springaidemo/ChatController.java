@@ -26,6 +26,6 @@ public class ChatController {
     @GetMapping("/ai/generate") // http://localhost:8080/ai/generate?message=Tell%20me%20a%20joke
     public Map generate(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
         log.info("generate - key={}, message={}", apiKey, message);
-        return Map.of("generation", chatClient.generate(message));
+        return Map.of("generation", chatClient.call(message));
     }
 }

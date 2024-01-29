@@ -2,8 +2,8 @@ package biz.lci.springaidemo;
 
 import org.springframework.ai.chat.ChatClient;
 import org.springframework.ai.chat.Generation;
-import org.springframework.ai.prompt.Prompt;
-import org.springframework.ai.prompt.PromptTemplate;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -31,7 +31,7 @@ public class PromptTemplateController {
         PromptTemplate promptTemplate = new PromptTemplate(jokeResource);
         Prompt prompt = promptTemplate.create(
                 Map.of("adjective", adjective, "topic", topic));
-        return chatClient.generate(prompt).getGeneration();
+        return chatClient.call(prompt).getResult();
     }
 
 }

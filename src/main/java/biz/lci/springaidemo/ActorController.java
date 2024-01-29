@@ -2,11 +2,9 @@ package biz.lci.springaidemo;
 
 import org.springframework.ai.chat.ChatClient;
 import org.springframework.ai.chat.Generation;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.parser.BeanOutputParser;
-import org.springframework.ai.parser.OutputParser;
-import org.springframework.ai.prompt.Prompt;
-import org.springframework.ai.prompt.PromptTemplate;
-import org.springframework.ai.prompt.messages.UserMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,7 +41,7 @@ public class ActorController {
                 Map.of("actor", actor, "format", outputParser.getFormat()));
         Prompt prompt = promptTemplate.create();
 
-        Generation generation = chatClient.generate(prompt).getGeneration();
-        return outputParser.parse(generation.getContent());
+        Generation generation = chatClient.call(prompt).getResult();
+        return outputParser.parse(generation.toString());
     }
 }
