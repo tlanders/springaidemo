@@ -18,7 +18,7 @@ public class PromptController {
     @Autowired
     protected ChatClient chatClient;
 
-    @GetMapping("/prompt")
+    @GetMapping("/ai/prompt")
     public Map<String, String> chat(
             @RequestParam(defaultValue = "Tell me an important fact") String userPrompt,
             @RequestParam(defaultValue = "You are a pirate and only like to talk about pirate stuff") String systemPrompt) {
