@@ -19,7 +19,7 @@ public class RecommendationController {
     public Map<String,Object> recommend(@RequestParam(defaultValue = "I have a dog") String message) {
         log.info("recommend - message={}", message);
         return Map.of(
-                "generation", recommendationService.recommend(message),
+                "recommendation", recommendationService.recommend(message).getOutput().getContent(),
                 "message", message
         );
     }
