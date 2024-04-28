@@ -1,5 +1,7 @@
 package biz.lci.springaidemos.langchain4j;
 
+import biz.lci.springaidemos.domain.Product;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.ChatMemory;
@@ -10,11 +12,14 @@ import dev.langchain4j.service.AiServices;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -22,6 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class BasicChatController {
     @Value("${spring.ai.openai.api-key}")
     private String OPENAI_API_KEY;
+
+    @Value("classpath:/data/skus-all-en-us.json")
+    protected Resource skuDataJson;
+
+    @Value("classpath:/data/products-partial-20240407-172836-en-us.json")
+    protected Resource productDataJson;
 
     interface Assistant {
         String chat(String prompt);
@@ -55,5 +66,29 @@ public class BasicChatController {
 
         log.debug("basicChat - response={}", response);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value = "/recommendFood")
+    public ResponseEntity<String> recommendFood(@RequestParam(defaultValue = "I have a dog") String message) throws Exception {
+        // read json docs
+        final ObjectMapper objectMapper = new ObjectMapper();
+
+        List<Product> products = objectMapper.readValue(skuDataJson.getFile(),
+                objectMapper.getTypeFactory().constructCollectionType(List.class, Product.class));
+
+
+        return ResponseEntity.ok("I recommend you try the chicken.");
+    }
+
+    @GetMapping(value = "/recommendProduct")
+    public ResponseEntity<String> recommendProduct(@RequestParam(defaultValue = "I have a dog") String message) throws Exception {
+        // read json docs
+        final ObjectMapper objectMapper = new ObjectMapper();
+
+        List<Product> products = objectMapper.readValue(productDataJson.getFile(),
+                objectMapper.getTypeFactory().constructCollectionType(List.class, Product.class));
+
+
+        return ResponseEntity.ok("I recommend you try the chicken. Product count=" + products.size());
     }
 }
