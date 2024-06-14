@@ -1,9 +1,12 @@
 package biz.lci.springaidemos.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class Product {
@@ -37,6 +40,15 @@ public class Product {
     protected Double mevalue;
     protected Double drydensity;
 
+    protected List<Sku> skus = new ArrayList<>();
+
+    protected static final ObjectMapper objectMapper = new ObjectMapper();
+
     @JsonProperty("skus")
-    protected List<Sku> skus;
+    public void setSkus(List<Map<String, Object>> skuList) {
+        for(Map<String, Object> skuData: skuList) {
+            Sku sku = objectMapper.convertValue(skuData, Sku.class);
+            this.skus.add(sku);
+        }
+    }
 }
